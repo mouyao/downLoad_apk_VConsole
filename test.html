@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<script type="text/javascript" src="./js/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="./js/vconsole.min.js"></script>
+	<title>点击下载应用</title>
+	<style type="text/css">
+		*{margin:0; padding:0;}
+		a{text-decoration: none;}
+		img{max-width: 100%; height: auto;}
+		.weixin-tip{display: none; position: fixed; left:0; top:0; bottom:0; background: rgba(0,0,0,0.8); filter:alpha(opacity=80);  height: 100%; width: 100%; z-index: 100;}
+		.weixin-tip p{text-align: center; margin-top: 10%; padding:0 5%;}
+		#download_div{position: fixed;bottom: 0;left:0;height:60px;width: 100%;background-color: #ffffff
+		}
+		#download{width:80%;height:40px;background-color:rgba(68,207,251,100);
+			color: #ffffff;margin:10px 10%;border-radius:30px;font-size:16px}
+	    #main{width:100%;height:auto;background: url("img/download_bg.png") no-repeat;background-size: 100%}
+	</style>
+</head>
+<body>
+<div class="weixin-tip">
+	<p>
+		<img src="img/live_weixin.png" alt="微信打开"/>
+	</p>
+</div>
+<main id="main">
+</main>
+<div id="download_div">
+	<input type="button"  id="download" value="下载apk" />
+</div>
+<script type="text/javascript">
+    var winHeight = $(window).height();
+    var ua = navigator.userAgent.toLowerCase();
+    var downLoad_apk={
+        init:function(){
+            downLoad_apk.initPage();
+            downLoad_apk.bindEvent();
+		},
+		initPage:function(){
+            var isWeixin = downLoad_apk.is_weixin();
+            if(isWeixin){       //如果是微信
+                $(".weixin-tip").css("height",winHeight);
+                $(".weixin-tip").show();
+                $("#download").hide();  //隐藏下载按钮
+                $("#main").hide();      //隐藏背景图
+            }
+            var winWidth=$(window).width();
+            console.log("屏幕的宽度为："+winWidth);
+            $("#main").css("height",winWidth*3.29);
+            $("body").css("height",winWidth*3.29+60);    //下载按钮本身的高度为60，避免遮盖
+		},
+		is_weixin:function(){
+            if (ua.match(/MicroMessenger/i) == "micromessenger") {
+                return true;
+            } else {
+                return false;
+            }
+		},
+		bindEvent:function(){
+            var button=document.getElementById("download");
+            var isAndroid = ua.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+            var isiOS = !!ua.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+            button.addEventListener("click",function(){
+                //在此处判断是苹果还是安卓手机，安卓下载
+                if(isAndroid){
+                    //普通浏览器可以打开，但是微信屏蔽了下载apk的链接，不能正常下载
+                    location.href="http://cdn-h3-p1.vas.lutongnet.com/music_unlock/apk/20170504update/blkg/OTT_APP_KALAOK_alibaba_449_20170817_004.apk"
+                }else{
+                    //直接跳转到苹果appStore,携带上app的id
+                    location.href="https://itunes.apple.com/cn/app/%E9%83%A8%E8%90%BD%E5%86%B2%E7%AA%81-clash-of-clans/id529479190?mt=8&from=singlemessage"
+                }
+            });
+		}
+	};
+    //当页面内容加载完全后，开始初始化页面
+    $(window).on("load",function(){
+        //引入微信小程序的是Vconsole移动端调试工具，查看页面错误,在执行自己写的代码之前实例Vconsole
+        var vConsole = new VConsole();
+        console.log('VConsole is cool');
+        //开启页面下载程序
+        downLoad_apk.init();
+    });
+</script>
+</body>
+</html>
